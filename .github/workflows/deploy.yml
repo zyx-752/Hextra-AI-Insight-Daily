@@ -3,31 +3,36 @@ name: Deploy to Aliyun OSS
 
 on:
   push:
-    branches: [ "main" ] # 当 main 分支有推送时触发
+    branches: [ "main" ]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # 升级到 v4 以解决警告[reference:12]
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4  # 升级到 v4 以解决警告[reference:13]
         with:
           node-version: '18'
-          cache: 'npm'
+          cache: 'pnpm'  # 将缓存改为 pnpm
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2  # 新增：安装并配置 pnpm
+        with:
+          version: 8  # 你可以根据项目实际情况调整版本
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile  # 使用 pnpm 安装依赖
 
       - name: Build project
-        run: npm run build
+        run: pnpm run build  # 使用 pnpm 执行构建
 
       - name: Setup ossutil
         uses: manyuanrong/setup-ossutil@v2.0
         with:
-          endpoint: "oss-cn-wuhan-lr.aliyuncs.com" # 替换为你的OSS地域节点
+          endpoint: "oss-cn-wuhan-lr.aliyuncs.com"
           access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
           access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
 
