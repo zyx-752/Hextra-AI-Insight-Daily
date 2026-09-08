@@ -10,25 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # 升级到 v4 以解决警告[reference:12]
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4  # 升级到 v4 以解决警告[reference:13]
+      # 1. 安装 Hugo
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
         with:
-          node-version: '18'
-          cache: 'pnpm'  # 将缓存改为 pnpm
+          hugo-version: '0.119.0'  # 你可以根据需要调整版本
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2  # 新增：安装并配置 pnpm
-        with:
-          version: 8  # 你可以根据项目实际情况调整版本
+      # 2. 使用 Hugo 构建站点，生成 public 目录
+      - name: Build with Hugo
+        run: hugo --minify
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile  # 使用 pnpm 安装依赖
-
-      - name: Build project
-        run: pnpm run build  # 使用 pnpm 执行构建
-
+      # 3. 配置阿里云 OSS 上传工具
       - name: Setup ossutil
         uses: manyuanrong/setup-ossutil@v2.0
         with:
@@ -36,6 +30,7 @@ jobs:
           access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
           access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
 
+      # 4. 将生成的 public 目录同步到 OSS
       - name: Sync public to OSS
         run: |
           ossutil sync public/ oss://hextra-ai-insight-daily/ --delete --force
