@@ -29,7 +29,7 @@ jobs:
       - name: Setup ossutil
         uses: manyuanrong/setup-ossutil@v2.0
         with:
-          endpoint: "oss-cn-wuhan-lr.aliyuncs.com"
+          endpoint: "oss-cn-hongkong.aliyuncs.com"
           access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
           access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
 
