@@ -36,4 +36,4 @@ jobs:
       # 4. 将生成的 public 目录同步到 OSS
       - name: Sync public to OSS
         run: |
-          ossutil cp -r -u public/ oss://hextra-ai-insight-daily/ --force
+          ossutil cp -r -u public/ oss://hextra-ai-insight-daily-hk/ --force
