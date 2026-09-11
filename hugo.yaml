@@ -47,12 +47,7 @@ menu:
       name: 关于我 ↗
       url: "https://github.com/CoderKite"
       weight: 2
-    - identifier: github   
-      name: 同性交友
-      weight: 3
-      url: "https://github.com/CoderKite/Hextra-AI-Insight-Daily"
-      params:
-        icon: github
+  
 
 
 params:
